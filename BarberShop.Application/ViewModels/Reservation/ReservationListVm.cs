@@ -14,6 +14,8 @@ namespace BarberShop.Application.ViewModels.Reservation
         public bool IsReserved { get; set; }
 
         public int? ServicePriceRelId { get; set; }
+        public string ServiceType { get; set; } = null!;
+        public string HairStylist { get; set; } = null!;
 
         public int? UserId { get; set; }
     }

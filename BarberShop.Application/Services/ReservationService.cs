@@ -57,6 +57,12 @@ namespace BarberShop.Application.Services
             return _mapper.Map<IEnumerable<ReservationListVm>>(reserves);
         }
 
+        public IEnumerable<ReservationListVm> GetTodayReserves()
+        {
+            var reserves = _reservationRepository.GetTodayReserves();
+            return _mapper.Map<IEnumerable<ReservationListVm>>(reserves);
+        }
+
         public bool Remove(int id)
         {
             return _reservationRepository.Remove(id);

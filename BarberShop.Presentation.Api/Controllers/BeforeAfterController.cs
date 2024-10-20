@@ -50,6 +50,20 @@ namespace BarberShop.Presentation.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("SaveImg")]
+        public IActionResult SaveImg([FromBody]IFormFile file)
+        {
+            try
+            {
+                SaveImg(file);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(int id)
         {

@@ -42,14 +42,12 @@ namespace BarberShop.Application.Helper
         {
             CultureInfo persianCulture = new("fa-IR");
             PersianCalendar persianCalendar = new();
-
             string[] dateParts = persianDate.Split(' ');
             string dayy = dateParts[0];
             int day = ConvertPersianToDecimal(dayy);
             string monthName = dateParts[1];
             string yearr = dateParts[2];
             int year = ConvertPersianToDecimal(yearr);
-
             int month = Array.IndexOf(persianCulture.DateTimeFormat.MonthNames, monthName) + 1;
 
             return persianCalendar.ToDateTime(year, month, day, 0, 0, 0, 0);
@@ -73,6 +71,13 @@ namespace BarberShop.Application.Helper
             return timeList;
         }
 
+        public static DateOnly ConvertToDate(int year, int month, int day)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            var a = pc.ToDateTime(year, month, day, 0, 0, 0, 0);
+            var b = DateOnly.FromDateTime(a);
+            return b;
+        }
 
         public string ConvertToPersianDate(DateTime dateTime)
         {
@@ -108,6 +113,13 @@ namespace BarberShop.Application.Helper
         {
             DateTime persianDate = ConvertToDate(date);
             return persianDate.ToShortDateString();
+        }
+
+        public static DateTime ConvertToPersianDateTime(DateTime dateTime)
+        {
+            PersianDateTime persianDateTime = new PersianDateTime(dateTime);
+            DateTime dateTime1 = new DateTime(persianDateTime.Year, persianDateTime.Month, persianDateTime.Day, persianDateTime.Hour, persianDateTime.Minute, 0);
+            return dateTime1;
         }
     }
 }

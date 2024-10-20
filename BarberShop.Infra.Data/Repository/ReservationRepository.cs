@@ -2,6 +2,7 @@
 using BarberShop.Domain.Interfaces;
 using BarberShop.Domain.Models;
 using BarberShop.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Infra.Data.Repository
 {
-    public class ReservationRepository : IReservationRepository 
+    public class ReservationRepository : IReservationRepository
     {
         private readonly BarberShopContext _context;
         public ReservationRepository(BarberShopContext context)
@@ -67,7 +68,7 @@ namespace BarberShop.Infra.Data.Repository
             try
             {
                 var Reserves = _context.TblReservations.Where(i => DateOnly.FromDateTime(i.ReserveDate.Date) >= startDate)
-                .Where(i => DateOnly.FromDateTime(i.ReserveDate.Date) <= endDate)
+                .Where(i => DateOnly.FromDateTime(i.ReserveDate.Date) <= endDate).ToList()
                 .AsEnumerable();
                 if (Reserves.Count() == 0)
                 {
@@ -83,23 +84,40 @@ namespace BarberShop.Infra.Data.Repository
 
         }
 
+        public IEnumerable<TblReservation> GetTodayReserves()
+        {
+            try
+            {
+                var Reserves = _context.TblReservations.Where(i => i.ReserveDate.Date.Equals(DateTime.Now.Date)).AsEnumerable();
+                var res = Reserves.OrderBy(i => Math.Abs((i.ReserveDate - DateTime.Now).TotalMinutes)).ToList().AsEnumerable();
+                if (res.Count() == 0)
+                {
+                    throw new NullReferenceException();
+                }
+                return res;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw new NullReferenceException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("خطای داخلی سرور", ex);
+            }
+        }
+
         public bool Remove(int id)
         {
             var Todelete = _context.TblReservations.Find(id);
             if(Todelete == null)
                 return false;
 
-            Todelete.IsReserved = false;
-            _context.TblReservations.Update(Todelete);
+            //Todelete.IsReserved = false;
+            //_context.TblReservations.Update(Todelete);
+            _context.TblReservations.Remove(Todelete);
             _context.SaveChanges();
             return true;
         }
-
-        //struct ForFilloutTable
-        //{
-        //    public string Time { get; set; }
-        //    public bool IsReserved { get; set; }
-        //}
         public IEnumerable<TblReservation> ReservationHours(string Date, int IntervalTime, int ServiceId, string HairStylist)
         {
             List<TblReservation> TimeTable = new List<TblReservation>();

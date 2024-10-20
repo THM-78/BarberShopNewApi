@@ -80,6 +80,7 @@ public partial class BarberShopContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.TblReservations)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_TblReservation_TblUsers");
+            entity.HasQueryFilter(i => i.IsReserved == true);
         });
 
         modelBuilder.Entity<TblService>(entity =>

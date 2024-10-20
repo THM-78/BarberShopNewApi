@@ -1,4 +1,5 @@
-﻿using BarberShop.Application.Interfaces;
+﻿using BarberShop.Application.Helper;
+using BarberShop.Application.Interfaces;
 using BarberShop.Application.ViewModels.Reservation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,11 +54,10 @@ namespace BarberShop.Presentation.Api.Controllers
         {
             return Ok(_reservationService.GetByDate(date));
         }
-
-        [HttpGet("GetByTimePeriod")]
-        public IActionResult GetByTimePeriod(DateOnly startDate, DateOnly endDate)
+        [HttpGet("GetTodayReserves")]
+        public IActionResult GetToday()
         {
-            return Ok(_reservationService.GetByTimePeriod(startDate, endDate));
+            return Ok(_reservationService.GetTodayReserves());
         }
 
         [HttpPost("Edit")]
@@ -85,6 +85,22 @@ namespace BarberShop.Presentation.Api.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+
+        [HttpPost("GetByTimePeriod")]
+        public IActionResult GetByTimePeriod(SearchByDateResult result)
+        {
+            try
+            {
+                var fromDate = DateUtils.ConvertToDate(result.FromYear, result.FromMonth, result.FromDay);
+                var untilDate = DateUtils.ConvertToDate(result.UntilYear, result.UntilMonth, result.UntilDay);
+                var resultt = _reservationService.GetByTimePeriod(fromDate, untilDate);
+                return Ok(resultt);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

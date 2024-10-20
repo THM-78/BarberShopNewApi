@@ -1,4 +1,5 @@
-﻿using BarberShop.Application.Interfaces;
+﻿using BarberShop.Application.Helper;
+using BarberShop.Application.Interfaces;
 using BarberShop.Application.ViewModels.WorkPhoto;
 using BarberShop.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,20 @@ namespace BarberShop.Presentation.Api.Controllers
         {
             var result = _workPhotoService.GetById(id);
             return Ok(result);
+        }
+
+        [HttpPost("SaveImg")]
+        public IActionResult SaveImg( IFormFile file)
+        {
+            try
+            {
+                BarberShop.Application.Helper.SaveImg.Save(file);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("EditWorkPhoto")]

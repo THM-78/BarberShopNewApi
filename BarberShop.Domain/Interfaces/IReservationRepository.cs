@@ -12,6 +12,7 @@ namespace BarberShop.Domain.Interfaces
         bool Add(TblReservation reservation);
         Task<TblReservation> Get(int id);
         IEnumerable<TblReservation> ReservationHours(string Date, int IntervalTime, int ServiceId, string HairStylist);
+        IEnumerable<TblReservation> GetTodayReserves();
         IEnumerable<TblReservation> GetByDate(DateOnly dateOnly);
         IEnumerable<TblReservation> GetByTimePeriod(DateOnly startDate, DateOnly endDate);
         void Update(TblReservation reservation);

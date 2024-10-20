@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BarberShop.Application.Helper;
 using BarberShop.Application.ViewModels.BeforeAfterImg;
 using BarberShop.Application.ViewModels.DiscountCode;
 using BarberShop.Application.ViewModels.HairStylist;
@@ -91,7 +92,10 @@ namespace BarberShop.Application.Profiles
             #region Reservation
             CreateMap<CreateReservationVm, TblReservation>();
             CreateMap<TblReservation, ReservationVm>();
-            CreateMap<TblReservation, ReservationListVm>();
+            CreateMap<TblReservation, ReservationListVm>()
+                .ForMember(dest => dest.ServiceType, opt => opt.MapFrom(src => src.ServicePriceRel.Service.Type))
+                .ForMember(dest => dest.HairStylist, opt => opt.MapFrom(src => src.ServicePriceRel.HairStylist.Name))
+                .ForMember(dest => dest.ReserveDate, opt => opt.MapFrom(src => DateUtils.ConvertToPersianDateTime(src.ReserveDate)));
             CreateMap<EditReservationVm, TblReservation>();
             CreateMap<TblReservation, ReservationTimeTableVm>()
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.ReserveDate.ToString("HH:mm")));

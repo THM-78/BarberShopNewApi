@@ -13,6 +13,7 @@ namespace BarberShop.Application.Interfaces
         bool Add(CreateReservationVm reservation);
         Task<ReservationVm> Get(int id);
         IEnumerable<ReservationTimeTableVm> ReservationHours(ReservationHoursVm reservationVm);
+        IEnumerable<ReservationListVm> GetTodayReserves();
         IEnumerable<ReservationListVm> GetByDate(DateOnly dateOnly);
         IEnumerable<ReservationListVm> GetByTimePeriod(DateOnly startDate, DateOnly endDate);
         void Update(EditReservationVm reservation);
